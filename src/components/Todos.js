@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import update from 'immutability-helper';
+import update from "immutability-helper";
 
 class Todos extends Component {
   constructor(props) {
@@ -58,7 +58,9 @@ class Todos extends Component {
                 type="text"
                 name={todo}
                 value={todo}
-                onKeyDown={e => { this.checkBackspace(e, i) }}
+                onKeyDown={e => {
+                  this.checkBackspace(e, i);
+                }}
                 onChange={e => {
                   this.handleTodoChange(e, i);
                 }}
