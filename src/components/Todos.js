@@ -10,6 +10,7 @@ class Todos extends Component {
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.checkBackspace = this.checkBackspace.bind(this);
   }
   handleSubmit(e) {
     e.preventDefault();
@@ -19,11 +20,23 @@ class Todos extends Component {
   handleChange(e) {
     this.setState({ text: e.target.value });
   }
-  handleTodoChange(e, i) {
-    console.log(e.target.value, i);
+  handleTodoChange(e, todoIndex) {
     const text = e.target.value;
-    const newTodos = update(this.state.todos, {[i]: {$set: text}});
-    this.setState({todos: newTodos});
+    const newTodos = update(this.state.todos, { [todoIndex]: { $set: text } });
+    this.setState({ todos: newTodos });
+  }
+  checkBackspace(e, todoIndex) {
+    const code = e.keyCode || e.charCode;
+    if (code === 8 || code === 0) {
+      const todos = this.state.todos;
+      const targetTodo = todos[todoIndex];
+      if (targetTodo.length === 0) {
+        const start = todoIndex;
+        const deleteCount = 1;
+        const newTodos = update(todos, { $splice: [[start, deleteCount]] });
+        this.setState({ todos: newTodos });
+      }
+    }
   }
   render() {
     const { todos } = this.state;
@@ -45,6 +58,7 @@ class Todos extends Component {
                 type="text"
                 name={todo}
                 value={todo}
+                onKeyDown={e => { this.checkBackspace(e, i) }}
                 onChange={e => {
                   this.handleTodoChange(e, i);
                 }}
